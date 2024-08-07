@@ -263,6 +263,45 @@ parr_mini_maze = files(data).joinpath("parr_mini_maze.txt")
 ramesh_maze = files(data).joinpath("ramesh_maze.txt")
 wide_path = files(data).joinpath("wide_path.txt")
 
+def move_starts_and_goals_gridworld(template, start_locations=[], goal_locations=[]):
+    """
+    Moves the start and goal positions of the given environment to the given positions.
+
+    Args:
+        template(Path): The environment to move the start and goal positions of.
+        starts (List[Tuple[int]]): The new start positions for the environment.
+        goals (List[Tuple[int]]): The new goal positions for the environment.
+
+    Returns:
+        tempfile: modified environment template with new start and goal positions.
+    """
+    import tempfile
+    from copy import deepcopy
+    temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
+    #string_representation = deepcopy(open(template).readlines())
+    string_representation = np.loadtxt(template, comments="//", dtype=str)
+    for (i,j) in start_locations:
+        string_representation[i][j] = 'S'
+    for (i,j) in goal_locations:
+        string_representation[i][j] = 'G'
+    
+    if start_locations:
+        # remove all start locations not in start_locations
+        for i in range(len(string_representation)):
+            for j in range(len(string_representation[i])):
+                if string_representation[i][j] == 'S' and (i,j) not in start_locations:
+                    string_representation[i][j] = '.'
+    if goal_locations:
+        # remove all goal locations not in goal_locations
+        for i in range(len(string_representation)):
+            for j in range(len(string_representation[i])):
+                if string_representation[i][j] == 'G' and (i,j) not in goal_locations:
+                    string_representation[i][j] = '.'
+    string_representation = '\n'.join([' '.join(row) for row in string_representation])
+    temp_file.write(string_representation)
+    temp_file.close()
+    return temp_file.name
+
 
 class TwoRooms(DiscreteRoomEnvironment):
     """
@@ -271,8 +310,12 @@ class TwoRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(default_two_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(default_two_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = default_two_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class SixRooms(DiscreteRoomEnvironment):
@@ -282,8 +325,12 @@ class SixRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(default_six_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(default_six_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = default_six_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class NineRooms(DiscreteRoomEnvironment):
@@ -293,8 +340,12 @@ class NineRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.001
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(default_nine_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(default_nine_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = default_nine_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class XuFourRooms(DiscreteRoomEnvironment):
@@ -306,8 +357,12 @@ class XuFourRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(xu_four_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(xu_four_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = xu_four_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class BridgeRoom(DiscreteRoomEnvironment):
@@ -318,8 +373,12 @@ class BridgeRoom(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(bridge_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(bridge_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = bridge_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class CageRoom(DiscreteRoomEnvironment):
@@ -329,8 +388,12 @@ class CageRoom(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(cage_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(cage_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = cage_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class EmptyRoom(DiscreteRoomEnvironment):
@@ -340,8 +403,12 @@ class EmptyRoom(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(empty_room, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(empty_room, start_locations, goal_locations)
+        else:
+            room_template_file_path = empty_room
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class SmallRooms(DiscreteRoomEnvironment):
@@ -352,8 +419,12 @@ class SmallRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(small_rooms, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(small_rooms, start_locations, goal_locations)
+        else:
+            room_template_file_path = small_rooms
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class FourRooms(DiscreteRoomEnvironment):
@@ -363,8 +434,12 @@ class FourRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(four_rooms, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(four_rooms, start_locations, goal_locations)
+        else:
+            room_template_file_path = four_rooms
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class FourRoomsHoles(DiscreteRoomEnvironment):
@@ -374,8 +449,12 @@ class FourRoomsHoles(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(four_rooms_holes, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(four_rooms_holes, start_locations, goal_locations)
+        else:
+            room_template_file_path = four_rooms_holes
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class MazeRooms(DiscreteRoomEnvironment):
@@ -385,8 +464,12 @@ class MazeRooms(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(maze_rooms, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(maze_rooms, start_locations, goal_locations)
+        else:
+            room_template_file_path = maze_rooms
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class SpiralRoom(DiscreteRoomEnvironment):
@@ -396,8 +479,12 @@ class SpiralRoom(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(spiral_rooms, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(spiral_rooms, start_locations, goal_locations)
+        else:
+            room_template_file_path = spiral_rooms
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class ParrMaze(DiscreteRoomEnvironment):
@@ -408,8 +495,12 @@ class ParrMaze(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(parr_maze, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(parr_maze, start_locations, goal_locations)
+        else:
+            room_template_file_path = parr_maze
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class ParrMiniMaze(DiscreteRoomEnvironment):
@@ -420,8 +511,12 @@ class ParrMiniMaze(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(parr_mini_maze, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(parr_mini_maze, start_locations, goal_locations)
+        else:
+            room_template_file_path = parr_mini_maze
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class RameshMaze(DiscreteRoomEnvironment):
@@ -431,8 +526,12 @@ class RameshMaze(DiscreteRoomEnvironment):
     Movement Penalty: -0.01
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(ramesh_maze, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(ramesh_maze, start_locations, goal_locations)
+        else:
+            room_template_file_path = ramesh_maze
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
 
 
 class WidePath(DiscreteRoomEnvironment):
@@ -440,5 +539,9 @@ class WidePath(DiscreteRoomEnvironment):
     A single-room environment featuring a wide path from the starting state to the goal state.
     """
 
-    def __init__(self, movement_penalty=-0.001, goal_reward=1):
-        super().__init__(wide_path, movement_penalty, goal_reward)
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=[], goal_locations=[]):
+        if start_locations or goal_locations:
+            room_template_file_path = move_starts_and_goals_gridworld(wide_path, start_locations, goal_locations)
+        else:
+            room_template_file_path = wide_path
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
