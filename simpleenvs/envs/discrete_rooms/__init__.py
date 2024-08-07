@@ -53,3 +53,4 @@ from simpleenvs.envs.discrete_rooms.extra_items_rooms import BasicPenaltyRoom
 from simpleenvs.envs.discrete_rooms.extra_items_rooms import DoublePenaltyRoom
 from simpleenvs.envs.discrete_rooms.extra_items_rooms import FourRoomsFireWall
 from simpleenvs.envs.discrete_rooms.extra_items_rooms import FourRoomsPenalty
+from simpleenvs.envs.discrete_rooms.extra_items_rooms import FourRoomsReward

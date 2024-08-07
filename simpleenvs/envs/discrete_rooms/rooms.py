@@ -280,6 +280,8 @@ def move_starts_and_goals_gridworld(template, start_locations=None, goal_locatio
     temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False)
     #string_representation = deepcopy(open(template).readlines())
     string_representation = np.loadtxt(template, comments="//", dtype=str)
+    print(f"STRING REPRESENTATION:")
+    print(f"{string_representation}")
     if start_locations is not None:
         for (i,j) in start_locations:
             string_representation[i][j] = 'S'
@@ -300,6 +302,9 @@ def move_starts_and_goals_gridworld(template, start_locations=None, goal_locatio
                 if string_representation[i][j] == 'G' and (i,j) not in goal_locations:
                     string_representation[i][j] = '.'
     string_representation = '\n'.join([' '.join(row) for row in string_representation])
+    print(f"\n\nAFTER:")
+    print(f"STRING REPRESENTATION:")
+    print(f"{string_representation}")
     temp_file.write(string_representation)
     temp_file.close()
     return temp_file.name
