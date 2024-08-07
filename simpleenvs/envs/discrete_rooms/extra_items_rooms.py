@@ -146,6 +146,7 @@ basic_penalty_room = files(data).joinpath("basic_penalty_room.txt")
 double_penalty_room = files(data).joinpath("double_penalty_room.txt")
 four_rooms_firewall = files(data).joinpath("four_rooms_firewall.txt")
 four_rooms_penalty = files(data).joinpath("four_rooms_penalty.txt")
+four_rooms_multi_penalty = files(data).joinpath("four_rooms_multiple_penalty.txt")
 four_rooms_reward = files(data).joinpath("four_rooms_reward.txt")
 
 from .rooms import move_starts_and_goals_gridworld
@@ -256,4 +257,19 @@ class FourRoomsPenalty(ExtraItemsDiscreteRoomEnvironment):
             room_template_file_path = move_starts_and_goals_gridworld(four_rooms_penalty, start_locations, goal_locations)
         else:
             room_template_file_path = four_rooms_penalty
+        super().__init__(room_template_file_path, movement_penalty, goal_reward)
+
+
+class FourRoomsMultiPenalty(ExtraItemsDiscreteRoomEnvironment):
+    """
+    An instance of four-rooms with an additional penalty of -10 in the bottom left.
+    Goal Reward: +1
+    Movement Penalty: -0.01
+    """
+
+    def __init__(self, movement_penalty=-0.001, goal_reward=1, start_locations=None, goal_locations=None):
+        if start_locations is not None or goal_locations is not None:
+            room_template_file_path = move_starts_and_goals_gridworld(four_rooms_multi_penalty, start_locations, goal_locations)
+        else:
+            room_template_file_path = four_rooms_multi_penalty
         super().__init__(room_template_file_path, movement_penalty, goal_reward)
